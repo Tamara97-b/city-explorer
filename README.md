@@ -1,30 +1,59 @@
-# city explorer
+import React, { Component } from 'react'
+import axios from 'axios';
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import Card from 'react-bootstrap/Card'
 
-**Author**: tamara bassam
-**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+export class App extends Component {
 
-## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for this class. (i.e. What's your problem domain?) -->
+  constructor(props) {
+    super(props);
+    this.state = {
+      locationName: '',
+      locationData: {},
+      locationImgUrl: ''
+    }
+  }
 
-## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+  handelLocationNameChange = (e) => { this.setState({ locationName: e.target.value }) }
+  handelSubmit = async (e) => {
+    e.preventDefault();
+    const url = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&q=${this.state.locationName}&format=json`;
+    const response = await axios.get(url);
 
-## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+    await this.setState({
+      locationData: response.data[0]
+    });
 
-## Change Log
-<!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an example:
+    const centerKeyvalue = this.state.locationData.lat + "," + this.state.locationData.lon;
+    this.setState({
+      locationImgUrl: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&center=${centerKeyvalue}&zoom="5"&format=json`
+    })
+  }
 
-01-01-2001 4:59pm - Application now has a fully-functional express server, with a GET route for the location resource. -->
+  render() {
+    return (
+      <div>
+        <Form onSubmit={this.handelSubmit} style={{ width: '18rem', margin: '10%' }}>
+          <Form.Control type="text" onChange={this.handelLocationNameChange} placeholder="enter city name" />
+          <Button variant="primary" type="Explorer">
+            Explorer
+          </Button>
+        </Form>
 
-## Credit and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
-Name of feature: __city explorer______________________________
+        <Card style={{ width: '18rem', margin: '10%' }}>
+          <Card.Img variant="top" src="holder.js/100px180" src={this.state.locationImgUrl} style={{ width: '80%', height: '80%' }} />
+          <Card.Body>
+            <Card.Title>{this.state.locationData.display_name}</Card.Title>
+            <Card.Text>
+              <p>lat: {this.state.locationData.lat}</p>
+              <p>lon: {this.state.locationData.lon}</p>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </div>
+    )
+  }
+}
 
-Estimate of time needed to complete: __5hr___
-
-Start time: 3:00
-
-Finish time: 11:00
-
-Actual time needed to complete: _8hr____
+export default App
