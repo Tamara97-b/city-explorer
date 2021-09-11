@@ -19,12 +19,12 @@
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
-Name of feature: ________________________________
+Name of feature: __city explorer______________________________
 
-Estimate of time needed to complete: _____
+Estimate of time needed to complete: __5hr___
 
-Start time: _____
+Start time: 3:00
 
-Finish time: _____
+Finish time: 11:00
 
-Actual time needed to complete: _____
+Actual time needed to complete: _8hr____
