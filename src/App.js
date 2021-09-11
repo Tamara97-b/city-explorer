@@ -3,7 +3,9 @@ import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Row from 'react-bootstrap/Row';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Movie from './component/movie';
 
 export class App extends Component {
   constructor(props) {
@@ -13,6 +15,7 @@ export class App extends Component {
       locationData: {},
       locationImgUrl: '',
       locationWeather: '',
+      movieInfo: [],
     }
   }
 
@@ -30,6 +33,7 @@ export class App extends Component {
         locationWeather: response2.data[0],
       });
       const centerKeyvalue = this.state.locationData.lat + "," + this.state.locationData.lon;
+      this.getMovieData();
       this.setState({
         locationImgUrl: `https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&center=${centerKeyvalue}&zoom="5"&format=jpg`,
       });
@@ -39,8 +43,21 @@ export class App extends Component {
         error: true,
       });
     }
+    
   }
 
+  getMovieData = async () => {
+    const url = `https://city-explorer-api-tamara.herokuapp.com/get-movies?city_name=${this.state.locationName}`;
+    console.log(url);
+    axios
+      .get(url)
+      .then(result => {
+        this.setState({
+          movieInfo: result.data,
+        })
+      })
+      .catch(err => console.log(err))
+  }
   render() {
     return (
       <body className='body'>
@@ -70,6 +87,21 @@ export class App extends Component {
             </Card.Body>
           </Card>
         </div>
+        <Row className="justify-content-between" className='row'>
+          {this.state.movieInfo.map(item => {
+            return (
+              <Movie
+                title={item.title}
+                overview={item.overview}
+                average_votes={item.average_votes}
+                total_votes={item.total_votes}
+                image_url={item.image_url}
+                popularity={item.popularity}
+                released_on={item.released_on}
+              />
+            )
+          })}
+        </Row>
       </body>
     )
   }
