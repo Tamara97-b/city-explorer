@@ -22,7 +22,7 @@ export class App extends Component {
     try {
       const url = `https://eu1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATION_IQ_KEY}&q=${this.state.locationName}&format=json`;
       const response = await axios.get(url);//locationIQ      
-      const wethearUrl = await `https://city-explorer-api-haneen.herokuapp.com/get-wethear?city_name=${this.state.locationName}`;
+      const wethearUrl = await `https://city-explorer-api-tamara.herokuapp.com/get-wethear?city_name=${this.state.locationName}`;
       const response2 = await axios.get(wethearUrl);//weather response      
 
       await this.setState({
